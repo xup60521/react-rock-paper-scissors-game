@@ -2,3 +2,13 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+#paper-img {
+    view-transition-name: paper;
+}
+#rock-img {
+    view-transition-name: rock;
+}
+#scissors-img {
+    view-transition-name: scissors;
+}

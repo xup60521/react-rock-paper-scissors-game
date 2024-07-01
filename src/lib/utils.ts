@@ -1,0 +1,1 @@
+export type Picked = "rock" | "paper" | "scissors" | ""
