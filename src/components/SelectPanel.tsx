@@ -1,27 +1,11 @@
 import IconPaper from "@/assets/images/icon-paper.svg?react";
 import IconScissors from "@/assets/images/icon-scissors.svg?react";
 import IconRock from "@/assets/images/icon-rock.svg?react";
-import { type Picked } from "@/lib/utils";
-import { flushSync } from "react-dom";
+import { useGame } from "@/lib/hooks";
 
-export default function SelectPanel(props: {
-    setPicked: React.Dispatch<React.SetStateAction<Picked>>;
-}) {
-    function setPicked(e: Picked) {
-        const { setPicked: set } = props;
-        const document2 = document as unknown as Document & {
-            startViewTransition: (a: () => void) => void;
-        };
-        if ("startViewTransition" in document2) {
-            document2.startViewTransition(() => {
-                flushSync(() => {
-                    set(e);
-                });
-            });
-        } else {
-            set(e);
-        }
-    }
+export default function SelectPanel() {
+    const { setPicked } = useGame();
+
     return (
         <div className="w-full flex flex-col gap-5">
             <div className="flex gap-16 justify-center relative">
