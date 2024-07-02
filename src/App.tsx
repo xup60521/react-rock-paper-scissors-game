@@ -1,83 +1,155 @@
-import { Fragment } from "react";
+import { Fragment, useState } from "react";
 import SelectPanel from "./components/SelectPanel";
 import { whoWins, type Picked } from "./lib/utils";
 import IconPaper from "@/assets/images/icon-paper.svg?react";
 import IconScissors from "@/assets/images/icon-scissors.svg?react";
 import IconRock from "@/assets/images/icon-rock.svg?react";
 import { useGame } from "./lib/hooks";
+import RuleImage from "@/assets/images/image-rules.svg";
+import IconClose from "@/assets/images/icon-close.svg";
 
 export default function App() {
     const { myPick, housePick, score } = useGame();
+    const [openModal, setOpenModal] = useState(false);
+    return (
+        <Fragment>
+            {openModal && (
+                <div
+                    onMouseDown={() => setOpenModal(false)}
+                    className="fixed h-screen w-screen z-10 flex items-center justify-center"
+                ></div>
+            )}
+            <Modal open={openModal} setOpen={setOpenModal} />
+            <div
+                className={`min-h-screen flex-col flex justify-center items-center gap-4 overflow-x-hidden transition ${
+                    openModal ? "brightness-50" : "brightness-100"
+                }`}
+                style={{
+                    background:
+                        "radial-gradient(circle at top, hsl(214, 47%, 23%) 0%, hsl(237, 49%, 15%) 50%)",
+                }}
+            >
+                <div className="flex flex-col gap-12 lg:w-[45vw] px-4 w-full flex-grow items-center py-8 relative">
+                    <div className="rounded-2xl border-2 border-c_border_outline px-6 py-4 flex justify-between w-full items-center">
+                        <div className="flex flex-col">
+                            <span className="font-barlow text-white font-bold text-2xl lg:text-[2.25rem] lg:leading-8 leading-5">
+                                ROCK
+                            </span>
+                            <span className="font-barlow text-white font-bold text-2xl lg:text-[2.25rem] lg:leading-8 leading-5">
+                                PAPER
+                            </span>
+                            <span className="font-barlow text-white font-bold text-2xl lg:text-[2.25rem] lg:leading-8 leading-5">
+                                SCISSORS
+                            </span>
+                        </div>
+                        <div className="flex flex-col items-center justify-center bg-white rounded-lg lg:w-32 w-24 py-2 h-full">
+                            <span className="font-barlow text-c_score_text font-semibold  lg:text-md text-sm">
+                                SCORE
+                            </span>
+                            <span className="font-barlow text-[3rem] text-c_dark_text font-bold -my-3">
+                                {score}
+                            </span>
+                        </div>
+                    </div>
+                    {myPick === "" && <SelectPanel />}
+                    {myPick !== "" && (
+                        <div className="grid grid-cols-2 w-full relative lg:scale-100">
+                            <div
+                                className={`flex lg:flex-col flex-col-reverse lg:gap-12 items-center transition ${
+                                    housePick !== "" && "lg:-translate-x-[35%]"
+                                }`}
+                            >
+                                <span className="font-barlow font-semibold text-white lg:mt-0 -mt-6 lg:text-xl tracking-widest">
+                                    YOU PICKED
+                                </span>
+                                <div className="relative lg:scale-100 scale-[0.55]">
+                                    <WinGradient
+                                        open={
+                                            whoWins(myPick, housePick) === "p1"
+                                        }
+                                    />
+                                    <DisplayPick
+                                        picked={myPick}
+                                        hasTransition
+                                    />
+                                </div>
+                            </div>
+                            <Result state={whoWins(myPick, housePick)} />
+                            <div
+                                className={`flex lg:flex-col flex-col-reverse lg:gap-12 items-center relative transition ${
+                                    housePick !== "" && "lg:translate-x-[35%]"
+                                }`}
+                            >
+                                <span className="font-barlow font-semibold text-white lg:mt-0 -mt-6 lg:text-xl tracking-widest">
+                                    THE HOUSE PICKED
+                                </span>
+                                <div className="relative lg:scale-100 scale-[0.55]">
+                                    <WinGradient
+                                        open={
+                                            whoWins(myPick, housePick) === "p2"
+                                        }
+                                    />
+                                    <DisplayPick picked={housePick} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
+                </div>
+                <div className="w-full flex justify-center lg:justify-end px-8 py-6">
+                    <button
+                        className="text-white transition hover:bg-white hover:text-black font-barlow rounded-md border-2 text-sm px-10 font-bold py-2"
+                        onMouseDown={(e) => {
+                            e.stopPropagation();
+                            setOpenModal(true);
+                        }}
+                    >
+                        RULES
+                    </button>
+                </div>
+            </div>
+        </Fragment>
+    );
+}
+
+function Modal({
+    open,
+    setOpen,
+}: {
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
     return (
         <div
-            className="min-h-screen flex-col flex justify-center items-center gap-4 overflow-x-hidden"
-            style={{
-                background:
-                    "radial-gradient(circle at top, hsl(214, 47%, 23%) 0%, hsl(237, 49%, 15%) 50%)",
-            }}
+            className={`transition z-20 fixed top-[50vh] lg:py-0 py-12 -translate-y-[50%] -translate-x-[50%] left-[50vw] lg:w-[25rem] lg:h-fit w-full h-full lg:rounded-lg flex flex-col lg:justify-start justify-between items-center bg-white ${
+                open ? "scale-y-100" : "scale-y-0"
+            }`}
         >
-            <div className="flex flex-col gap-12 lg:w-[45vw] px-4 w-full flex-grow items-center py-8 relative">
-                <div className="rounded-2xl border-2 border-c_border_outline px-6 py-4 flex justify-between w-full items-center">
-                    <div className="flex flex-col">
-                        <span className="font-barlow text-white font-bold text-2xl lg:text-[2.25rem] lg:leading-8 leading-5">
-                            ROCK
-                        </span>
-                        <span className="font-barlow text-white font-bold text-2xl lg:text-[2.25rem] lg:leading-8 leading-5">
-                            PAPER
-                        </span>
-                        <span className="font-barlow text-white font-bold text-2xl lg:text-[2.25rem] lg:leading-8 leading-5">
-                            SCISSORS
-                        </span>
-                    </div>
-                    <div className="flex flex-col items-center justify-center bg-white rounded-lg lg:w-32 w-24 py-2 h-full">
-                        <span className="font-barlow text-c_score_text font-semibold  lg:text-md text-sm">
-                            SCORE
-                        </span>
-                        <span className="font-barlow text-[3rem] text-c_dark_text font-bold -my-3">
-                            {score}
-                        </span>
-                    </div>
-                </div>
-                {myPick === "" && <SelectPanel />}
-                {myPick !== "" && (
-                    <div className="grid grid-cols-2 w-full relative lg:scale-100">
-                        <div
-                            className={`flex lg:flex-col flex-col-reverse lg:gap-12 items-center transition ${
-                                housePick !== "" && "lg:-translate-x-[35%]"
-                            }`}
-                        >
-                            <span className="font-barlow font-semibold text-white lg:mt-0 -mt-6 lg:text-xl tracking-widest">
-                                YOU PICKED
-                            </span>
-                            <div className="relative lg:scale-100 scale-[0.55]">
-                                <WinGradient
-                                    open={whoWins(myPick, housePick) === "p1"}
-                                />
-                                <DisplayPick picked={myPick} hasTransition />
-                            </div>
-                        </div>
-                        <Result state={whoWins(myPick, housePick)} />
-                        <div
-                            className={`flex lg:flex-col flex-col-reverse lg:gap-12 items-center relative transition ${
-                                housePick !== "" && "lg:translate-x-[35%]"
-                            }`}
-                        >
-                            <span className="font-barlow font-semibold text-white lg:mt-0 -mt-6 lg:text-xl tracking-widest">
-                                THE HOUSE PICKED
-                            </span>
-                            <div className="relative lg:scale-100 scale-[0.55]">
-                                <WinGradient
-                                    open={whoWins(myPick, housePick) === "p2"}
-                                />
-                                <DisplayPick picked={housePick} />
-                            </div>
-                        </div>
-                    </div>
-                )}
+            <div className="flex items-center justify-center lg:justify-between p-6 w-full">
+                <span className="font-barlow text-c_bg font-bold text-3xl">
+                    RULES
+                </span>
+                <button
+                    onMouseDown={() => setOpen(false)}
+                    className="lg:block hidden"
+                >
+                    <span className="sr-only">close modal</span>
+                    <img src={IconClose} alt="close modal" />
+                </button>
             </div>
+            <img
+                src={RuleImage}
+                alt="game"
+                className="lg:w-4/6 w-5/6 pt-6 pb-10"
+            />
+            
+            <button onMouseDown={() => setOpen(false)} className="lg:hidden">
+                <span className="sr-only">close modal</span>
+                <img src={IconClose} alt="close modal" />
+            </button>
         </div>
     );
 }
+
 function Result({ state }: { state: "p1" | "p2" | "draw" | "" }) {
     const text =
         state === "p1" ? "YOU WIN" : state === "p2" ? "YOU LOSE" : "DRAW";
