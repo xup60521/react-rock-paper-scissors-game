@@ -78,9 +78,10 @@ export const useStartTransition = () => {
 };
 ```
 
+`startViewTransition` is directly attached to the document object, so we first check if the method exists
+
 In doing so, whether user’s browser support view transition api or not, our web app can run no matter what.
 
-`startViewTransition` is directly attached to the document object, so we first check if the method exists
 
 #### Context and custom Hook
 
