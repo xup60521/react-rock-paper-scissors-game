@@ -85,9 +85,9 @@ In doing so, whether user’s browser support view transition api or not, our we
 
 #### Context and custom Hook
 
-Besides, the game logic and state live through the whole app, not only individual components. Luckily react has a built in solution — context.
+Besides, the game logic and state live through the whole app, not only in individual components. Luckily react has a built in solution — context.
 
-Create a context and extract to an individual component
+
 
 ```tsx
 import { type Picked } from "@/lib/utils";
@@ -117,9 +117,9 @@ export function PickProvider({ children }: { children: React.ReactNode }) {
 }
 ```
 
-For a rock, paper, scissors game, it’s not enough. Though we can access the state from anywhere inside the context component, we still need to write our game logic for every components involved.
+For a rock, paper, scissors game, it’s not enough. Though we can access the state from anywhere inside the context provider, we still need to write the game logic for every components involved.
 
-For the sake of that, we need to do something further. I mention ‘game logic’ a lot in the article. What if we make them an individual hook, and any component can directly access to it, perform any operation from anywhere.
+For the sake of that, we need to do something further. If we make the game logic an individual hook, any component can directly access to it, performing any operation anywhere.
 
 ```tsx
 export const useGame = () => {
@@ -141,9 +141,9 @@ export const useGame = () => {
                         : "scissors";
                 setHousePick(housePick);
               // due to js closure, even though setMyPick
-              // happens before setTimeout callbacks,
+              // happens before the setTimeout callback,
               // the update function won't affect 
-              // the value of myPick variable.
+              // the value of myPick.
                 const whoIsWinning = whoWins(e, housePick);
                 setScore((prev) => {
                     if (whoIsWinning === "p1") {
@@ -169,9 +169,7 @@ export const useGame = () => {
 };
 ```
 
-These states / functions are shared across different components, so we can benefit from extracting to a custom hook.
-
-Although I separate `useGame` and `pickContext` in this case, it’s totally fine to encapsulate game logics in the context.
+Although I separate `useGame` and `pickContext` in this case, it’s totally fine to write game logic in the context.
 
 ### Resources
 
