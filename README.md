@@ -10,6 +10,7 @@ This is a solution to the [Rock, Paper, Scissors challenge on Frontend Mentor](h
     - [What I learned](#what-i-learned)
         - [ViewTransition API](#viewtransition-api)
         - [Context and custom hook](#context-and-custom-hook)
+    - [Deployment](#deployment)
     - [Resources](#resources)
 - [Acknowledgment](#acknowledgment)
 
@@ -170,6 +171,36 @@ export const useGame = () => {
 ```
 
 Although I separate `useGame` and `pickContext` in this case, it’s totally fine to write game logic in the context.
+
+### Deployment
+
+I use ```gh-pages``` to deploy this website to GiHub Pages.
+First install the package
+```bash
+pnpm add -D gh-pages
+```
+After initializing the repository, go to package.json, add a deploy command
+```json
+{
+    "scripts": {
+        // add this line
+        "deploy": "vite build && gh-pages -d dist"
+    }
+}
+```
+Since this project uses ```vite```, we need to setup the entry point.
+Go to ```vite.config.ts```. In the ```defineConfig```, add a ```base```
+```ts
+export default defineConfig({
+    plugins: [react(), svgr()],
+    base: "/react-rock-paper-scissors-game", 
+    // Based on the repo name
+    //Mine is `react-rock-paper-scissors-game`, 
+    //so the base is `/react-rock-paper-scissors-game`
+});
+
+```
+Run ```pnpm run deploy```, it should automatically build and deploy to GitHub Pages.
 
 ### Resources
 
